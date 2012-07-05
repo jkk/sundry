@@ -1,4 +1,4 @@
-(defproject com.jkkramer/util "1.0.0-SNAPSHOT"
+(defproject com.jkkramer/util "0.1.0-SNAPSHOT"
   :description "Justin Kramer's general-purpose utility libraries"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
