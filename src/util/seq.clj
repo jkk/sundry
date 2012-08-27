@@ -25,3 +25,17 @@
                          (cons f (step (rest s) (conj seen key)))))))
                  xs seen)))]
     (step coll #{})))
+
+(defn index-by
+  [keyfn rows & {:keys [unique many seed] :or {unique false, many false, seed {}}}]
+  (reduce
+   (fn [m [row k]]
+     (if unique
+       (assoc m k row)
+       (assoc m k (conj (m k []) row))))
+   seed
+   (if many
+     (for [row rows
+           sub-k (keyfn row)]
+       [row sub-k])
+     (map (juxt identity keyfn) rows))))
