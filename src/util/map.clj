@@ -10,6 +10,16 @@
        (assoc m1 k v)))
    m1 m2))
 
+(defn expand-keys [m]
+  (reduce-kv
+    (fn [m k v]
+      (if (sequential? k)
+        (merge (dissoc m k)
+               (zipmap k (if (sequential? v)
+                           v (repeat v))))
+        m))
+    m m))
+
 #_(defn assoc-unless [pred m & kvs]
   (reduce
    (fn [m [k v]]
