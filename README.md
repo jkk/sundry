@@ -6,7 +6,7 @@ General-purpose Clojure utility functions.
 
 Leiningen coordinate:
 
-    [com.jkkramer/util "1.0.0-SNAPSHOT"]
+    [com.jkkramer/util "0.1.0-SNAPSHOT"]
 
 ## License
 
