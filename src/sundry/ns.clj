@@ -1,4 +1,4 @@
-(ns util.ns)
+(ns sundry.ns)
 
 (defmacro defalias [sym var-sym]
   `(let [v# (var ~var-sym)]

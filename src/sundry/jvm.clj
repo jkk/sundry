@@ -1,4 +1,4 @@
-(ns util.jvm)
+(ns sundry.jvm)
 
 (defn mem-stats
   "Return stats about memory availability and usage, in MB. Calls

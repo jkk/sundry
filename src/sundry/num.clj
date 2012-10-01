@@ -1,4 +1,4 @@
-(ns util.num)
+(ns sundry.num)
 
 (defn parse-int [x & [default]]
   (if (number? x)

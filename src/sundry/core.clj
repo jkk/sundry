@@ -1,4 +1,4 @@
-(ns util.core)
+(ns sundry.core)
 
 (defn mapply [f & args]
   (apply f (apply concat (butlast args) (last args))))

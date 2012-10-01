@@ -1,7 +1,7 @@
-(ns util.seq-test
+(ns sundry.seq-test
   (:require
    [clojure.test :refer [deftest is]]
-   [util.seq :refer :all]))
+   [sundry.seq :refer :all]))
 
 (deftest test-interleave-all
   (is (= (interleave [1 2 3] [4 5 6]) (interleave-all [1 2 3] [4 5 6])))

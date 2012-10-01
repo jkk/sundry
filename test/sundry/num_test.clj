@@ -1,7 +1,7 @@
-(ns util.num-test
+(ns sundry.num-test
   (:require
    [clojure.test :refer [deftest is]]
-   [util.num :refer :all]))
+   [sundry.num :refer :all]))
 
 (deftest test-parse-int
   (is (= 123 (parse-int "123")))

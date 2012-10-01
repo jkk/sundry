@@ -1,4 +1,4 @@
-(ns util.string
+(ns sundry.string
   (:require [clojure.string :as string]))
 
 (defn capitalize [s]

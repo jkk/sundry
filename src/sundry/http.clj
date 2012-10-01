@@ -1,4 +1,4 @@
-(ns util.http
+(ns sundry.http
   (:require [clojure.string :as string])
   (:import [java.text SimpleDateFormat]
            [java.util Date TimeZone]))

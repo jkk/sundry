@@ -1,4 +1,4 @@
-(ns util.io
+(ns sundry.io
   (:refer-clojure :exclude [read])
   (:require
    [clojure.java.io :as io]))

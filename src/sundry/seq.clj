@@ -1,4 +1,4 @@
-(ns util.seq)
+(ns sundry.seq)
 
 (defn interleave-all [c1 c2]
   (lazy-seq

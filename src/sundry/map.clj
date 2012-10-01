@@ -1,4 +1,4 @@
-(ns util.map)
+(ns sundry.map)
 
 (defn merge-missing
   "Add entries to m1 from m2 that aren't already present"
