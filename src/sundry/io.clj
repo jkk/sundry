@@ -1,7 +1,10 @@
 (ns sundry.io
   (:refer-clojure :exclude [read])
   (:require
-   [clojure.java.io :as io]))
+   [clojure.java.io :as io]
+   [clojure.string :as string])
+  (:import
+    [java.io File]))
 
 (defn read
   [f]
@@ -35,4 +38,29 @@
 
 (defn gz-unserialize [bytes]
   (-> bytes ungzip read-string))
+
+(defmulti get-extension
+  "Returns the file extension of the given object - e.g., of a String or File.
+  The extension will be lowercased and normalized."
+  (fn [f] (class f)))
+
+(defmethod get-extension :default [f]
+  (throw (IllegalArgumentException.
+           (str "Could not determine extension of " f))))
+
+(def ^:private extension-normalizations
+  {"jpeg" "jpg"
+   "jpe" "jpg"
+   "tiff" "tif"})
+
+(defn normalize-extension [ext]
+  (let [ext* (string/lower-case ext)]
+    (extension-normalizations ext* ext*)))
+
+(defmethod get-extension String [f]
+  (normalize-extension
+    (second (re-find #"\.([^\.]+)$" f))))
+
+(defmethod get-extension File [^File f]
+  (get-extension (.getName f)))
 
