@@ -39,3 +39,12 @@
            sub-k (keyfn row)]
        [row sub-k])
      (map (juxt identity keyfn) rows))))
+
+(defn collify [x]
+  (if (coll? x) x [x]))
+
+(defn collify-key [m k]
+  (let [v (k m)]
+    (if (sequential? v)
+      m
+      (assoc m k [v]))))
