@@ -12,3 +12,15 @@
   (str (when-let [ns (namespace x)]
          (str (namespace x) "/"))
        (name x)))
+
+;; from clojure.core.reducers
+(defmacro compile-if
+  "Evaluate `exp` and if it returns logical true and doesn't error, expand to
+  `then`.  Else expand to `else`."
+  ([exp then]
+    `(compile-if ~exp ~then nil))
+  ([exp then else]
+    (if (try (eval exp)
+          (catch Throwable _ false))
+      `(do ~then)
+      `(do ~else))))
