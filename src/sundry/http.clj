@@ -10,7 +10,10 @@
       (.replace "%7E" "~")))
 
 (defn url-encode-path [path]
-  (let [parts (string/split path #"/")
+  (let [path (if (sequential? path)
+               (string/join "/" path)
+               path)
+        parts (string/split path #"/")
         parts (if (re-find #"/$" path) ;preserve trailing slash
                 (conj parts "")
                 parts)]
@@ -45,3 +48,26 @@
              (.setTimeZone (TimeZone/getTimeZone "GMT")))]
     (.format df (Date. (+ (System/currentTimeMillis)
                           (* max-age 1000))))))
+
+(defn- prep-params [params]
+  (when params
+    (str "?" (if (string? params)
+               params
+               (map->query-string params)))))
+
+(defn make-href-fn [base-path]
+  (fn [path & [params]]
+    (str base-path
+         (url-encode-path path)
+         (prep-params params))))
+
+(defn make-full-href-fn
+  [{:keys [protocol host port path] :or {port 80}}]
+  (fn [href-path & [params]]
+    (str protocol "://"
+         host
+         (when (not= 80 port)
+           (str ":" port))
+         path
+         (url-encode-path href-path)
+         (prep-params params))))
