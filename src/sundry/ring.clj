@@ -26,7 +26,7 @@
     (fn [req]
       (try
         (handler req)
-        (catch Exception e
+        (catch Throwable e
           (logger "Exception:\n%s" (stacktrace-str e))
           (throw e))))))
 
@@ -37,7 +37,7 @@
     (fn [req]
       (try
         (handler req)
-        (catch Exception e
+        (catch Throwable e
           {:status 500
            :headers {"Content-Type" "text/html"}
            :body (body-renderer req)})))))
@@ -46,7 +46,7 @@
   (fn [req]
     (try
       (handler req)
-      (catch Exception e
+      (catch Throwable e
         {:status 500
          :headers {"Content-Type" "text/html"}
          :body (str "<h1>Oops</h1><p>Something went wrong.</p>"
