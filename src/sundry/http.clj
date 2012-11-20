@@ -28,10 +28,17 @@
   "Turns a map into a query string, stringifying and encoding as necessary"
   (string/join
    "&" (for [[k v] m]
-         (str (url-encode (name k)) "="
-              (url-encode (if (keyword? v)
-                            (name v)
-                            (str v)))))))
+         (if (or (set? v) (sequential? v))
+           (string/join
+             "&" (for [v* v]
+                   (str (url-encode (name k)) "[]="
+                        (url-encode (if (keyword? v*)
+                                      (name v*)
+                                      (str v*))))))
+           (str (url-encode (name k)) "="
+                (url-encode (if (keyword? v)
+                              (name v)
+                              (str v))))))))
 
 ;; TODO: handle nested and repeated params
 (defn parse-query-string [qs]
