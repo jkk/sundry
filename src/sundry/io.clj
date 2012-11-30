@@ -11,6 +11,17 @@
   (binding [*read-eval* false]
     (clojure.core/read (java.io.PushbackReader. (io/reader f)))))
 
+(defn read-config
+  ([base-config]
+    (read-config base-config "config.clj"))
+  ([base-config path]
+    (merge-with (fn [a b] (if (map? b)
+                            (merge a b)
+                            b))
+                base-config
+                (when-let [res-config (io/resource "config.clj")]
+                  (read res-config)))))
+
 (defn read-seq
   [f]
   (let [eof (Object.)
