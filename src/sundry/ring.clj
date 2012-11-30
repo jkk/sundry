@@ -1,8 +1,9 @@
 (ns sundry.ring
   (:require [sundry.http :refer [max-age->expires]]
-            [sundry.core :refer [compile-if]]
             [sundry.ring.stateful-session :as sess]
-            [clojure.repl :as repl]))
+            [sundry.jvm :refer [stacktrace-str]]
+            ring.middleware.session
+            ring.middleware.session.cookie))
 
 (defn wrap-if [handler pred wrapper & args]
   (if pred
@@ -12,12 +13,6 @@
 (defn- default-logger [msg & vals]
   (let [line (apply format msg vals)]
     (locking System/out (println line))))
-
-(defn stacktrace-str [e]
-  (let [sw (java.io.StringWriter.)]
-    (binding [*err* sw]
-      (repl/pst e 1000)
-      (str sw))))
 
 (defn wrap-exception-logging
   ([handler]
