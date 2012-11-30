@@ -84,24 +84,21 @@
   (/ (double (- (System/nanoTime) *start-time*)) 1000000.0))
 
 
-(compile-if (do (require 'ring.middleware.session
-                         'ring.middleware.session.cookie)
-              true)
-  (defn make-cookie-session-wrapper
-    [& {:keys [path key cookie-name expires]}]
-    (let [expires (or expires (max-age->expires (* 60 60 24 365)))
-          sess-opts {:store (if key
-                              (ring.middleware.session.cookie/cookie-store
-                                {:key key})
-                              (ring.middleware.session.cookie/cookie-store))
-                     :cookie-attrs {:expires expires}}
-          sess-opts (if path
-                      (assoc sess-opts :root path)
-                      sess-opts)
-          sess-opts (if cookie-name
-                      (assoc sess-opts :cookie-name cookie-name)
-                      sess-opts)]
-      (fn [handler]
-        (ring.middleware.session/wrap-session handler sess-opts)))))
+(defn make-cookie-session-wrapper
+  [& {:keys [path key cookie-name expires]}]
+  (let [expires (or expires (max-age->expires (* 60 60 24 365)))
+        sess-opts {:store (if key
+                            (ring.middleware.session.cookie/cookie-store
+                              {:key key})
+                            (ring.middleware.session.cookie/cookie-store))
+                   :cookie-attrs {:expires expires}}
+        sess-opts (if path
+                    (assoc sess-opts :root path)
+                    sess-opts)
+        sess-opts (if cookie-name
+                    (assoc sess-opts :cookie-name cookie-name)
+                    sess-opts)]
+    (fn [handler]
+      (ring.middleware.session/wrap-session handler sess-opts))))
 
 (def wrap-stateful-session sess/wrap-stateful-session)
