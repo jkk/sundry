@@ -32,7 +32,7 @@
 
 (defn wrap-failsafe
   ([handler]
-    (wrap-failsafe (constantly "<h1>Oops</h1><p>Something went wrong.</p>")))
+    (wrap-failsafe handler (constantly "<h1>Oops</h1><p>Something went wrong.</p>")))
   ([handler body-renderer]
     (fn [req]
       (try
