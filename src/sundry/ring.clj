@@ -80,13 +80,11 @@
 
 
 (defn make-cookie-session-wrapper
-  [& {:keys [path key cookie-name expires]}]
-  (let [expires (or expires (max-age->expires (* 60 60 24 365)))
-        sess-opts {:store (if key
+  [& {:keys [path key cookie-name timeout]}]
+  (let [sess-opts {:store (if key
                             (ring.middleware.session.cookie/cookie-store
                               {:key key})
-                            (ring.middleware.session.cookie/cookie-store))
-                   :cookie-attrs {:expires expires}}
+                            (ring.middleware.session.cookie/cookie-store))}
         sess-opts (if path
                     (assoc sess-opts :root path)
                     sess-opts)
@@ -94,6 +92,12 @@
                     (assoc sess-opts :cookie-name cookie-name)
                     sess-opts)]
     (fn [handler]
-      (ring.middleware.session/wrap-session handler sess-opts))))
+      (fn [req]
+        (let [sess-opts (if timeout
+                          (assoc-in sess-opts [:cookie-attrs :expires]
+                                    (max-age->expires timeout))
+                          sess-opts)]
+          ((ring.middleware.session/wrap-session handler sess-opts)
+            req))))))
 
 (def wrap-stateful-session sess/wrap-stateful-session)
