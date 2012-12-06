@@ -2,8 +2,17 @@
   (:require [sundry.http :refer [max-age->expires]]
             [sundry.ring.stateful-session :as sess]
             [sundry.jvm :refer [stacktrace-str]]
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.keyword-params :refer [wrap-keyword-params]]
+            [ring.middleware.nested-params :refer [wrap-nested-params]]
+            [ring.middleware.multipart-params :refer [wrap-multipart-params]]
             ring.middleware.session
             ring.middleware.session.cookie))
+
+(def wrap-all-params (comp wrap-multipart-params
+                           wrap-params
+                           wrap-nested-params
+                           wrap-keyword-params))
 
 (defn wrap-if [handler pred wrapper & args]
   (if pred
