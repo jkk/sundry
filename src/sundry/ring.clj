@@ -1,5 +1,5 @@
 (ns sundry.ring
-  (:require [sundry.http :refer [max-age->expires]]
+  (:require [sundry.http :refer [max-age->expires parse-url]]
             [sundry.ring.stateful-session :as sess]
             [sundry.jvm :refer [stacktrace-str]]
             [ring.middleware.params :refer [wrap-params]]
@@ -110,3 +110,17 @@
             req))))))
 
 (def wrap-stateful-session sess/wrap-stateful-session)
+
+(defn wrap-zd-proxy [handler]
+  (fn [req]
+    (if-let [proxy-url (get-in req [:headers "x-zd-url"])]
+      (let [url (parse-url proxy-url)
+            req* (assoc req
+                        :scheme (:scheme url)
+                        :server-name (:host url)
+                        :server-port (or (:port url) 80)
+                        :uri (:path url)
+                        :headers (assoc (:headers req)
+                                        "host" (:authority url)))]
+        (handler req*))
+      (handler req))))
