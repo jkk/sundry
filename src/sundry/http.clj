@@ -78,3 +78,18 @@
          path
          (url-encode-path href-path)
          (prep-params params))))
+
+(defn parse-url [url]
+  (try
+    (let [jurl (java.net.URL. url)]
+      {:scheme (.getProtocol jurl)
+       :user-info (.getUserInfo jurl)
+       :host (.getHost jurl)
+       :port (let [port (.getPort jurl)]
+               (if (neg? port) nil port))
+       :authority (.getAuthority jurl)
+       :path (.getPath jurl)
+       :query-string (.getQuery jurl)
+       :fragment (.getRef jurl)
+       :file (.getFile jurl)})
+    (catch Exception _)))
