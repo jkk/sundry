@@ -19,9 +19,9 @@
     (apply wrapper handler args)
     handler))
 
-(defn- default-logger [msg & vals]
-  (let [line (apply format msg vals)]
-    (locking System/out (println line))))
+(defn- default-logger [req e]
+  (locking System/out
+    (println (format "Exception:\n%s" (stacktrace-str e)))))
 
 (defn wrap-exception-logging
   ([handler]
@@ -31,7 +31,7 @@
       (try
         (handler req)
         (catch Throwable e
-          (logger "Exception:\n%s" (stacktrace-str e))
+          (logger req e)
           (throw e))))))
 
 (defn wrap-failsafe
