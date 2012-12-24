@@ -6,7 +6,7 @@ General-purpose Clojure utility functions.
 
 Leiningen coordinate:
 
-    [sundry "0.2.0"]
+    [sundry "0.3.0"]
 
 ## License
 
