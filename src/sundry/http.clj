@@ -51,7 +51,7 @@
    (.split qs "&")))
 
 (defn max-age->expires [max-age]
-  (let [df (doto (SimpleDateFormat. "EEE, dd-MMM-yyyy kk:mm:ss z")
+  (let [df (doto (SimpleDateFormat. "EEE, dd MMM yyyy kk:mm:ss z")
              (.setTimeZone (TimeZone/getTimeZone "GMT")))]
     (.format df (Date. (+ (System/currentTimeMillis)
                           (* max-age 1000))))))

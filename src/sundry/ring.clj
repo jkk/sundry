@@ -7,7 +7,8 @@
             [ring.middleware.nested-params :refer [wrap-nested-params]]
             [ring.middleware.multipart-params :refer [wrap-multipart-params]]
             ring.middleware.session
-            ring.middleware.session.cookie))
+            ring.middleware.session.cookie
+            [clojure.string :as string]))
 
 (def wrap-all-params (comp wrap-multipart-params
                            wrap-params
@@ -65,11 +66,26 @@
     (binding [*req* req]
       (handler req))))
 
-(defn wrap-cache-control [handler max-age]
-  (fn [req]
-    (when-let [resp (handler req)]
-      (assoc-in resp [:headers "Expires"]
-                (max-age->expires max-age)))))
+(defn- format-cache-opts [opts]
+  (string/join ", " (for [[k v] opts]
+                      (cond
+                        (true? v) (name k)
+                        (false? v) nil
+                        :else (str (name k) "=" v)))))
+
+(defn wrap-cache-control
+  "See http://www.mnot.net/cache_docs/#CACHE-CONTROL
+
+  Adds Expires header when :max-age option provided."
+  [handler opts]
+  (let [cache-headers {"Cache-Control" (format-cache-opts opts)}]
+    (fn [req]
+      (when-let [resp (handler req)]
+        (let [cache-headers (if (:max-age opts)
+                              (assoc cache-headers
+                                     "Expires" (max-age->expires
+                                                 (:max-age opts))))]
+          (update-in resp [:headers] merge cache-headers))))))
 
 (defn wrap-ajax-detect [handler]
   (fn [req]
